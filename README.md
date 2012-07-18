@@ -32,4 +32,31 @@ This section discusses on the choice messages from a remote peer and what they m
 	* It sends discover (0) requests to all of its active peers, with the ip address of the primary requesting peer
 	* Thus, this enables in the primary requesting peer to get the active lists
 
+1 Reply for Discover message
+* This indicates that a remote peer is sending its active list to the primary requesting peer, which is itself ( this is the server thread )
+* Gets the peer list from the remote peer as a String
+* PopulatePeerList is called to add the new peers in the neighbourhood to its active peer list, and made sure duplicates are not present
+
+2 Request for the list of files
+* Create a list of files in the local file system in shared_folder directory
+* Convert the list to a single string
+* Send the length of the string
+* Send the string
+
+3 Request for a file
+* Get the name of the file
+* Wait for the remote peer to connect on the data port
+* Send the file  
+
+-----------------------------------------------------------------------------
+
+*Transaction of lists over the connection*
+
+This discusses the mechanism used to transfer the lists over the TCP/IP connection which handles only transfer of bytes. The mechanism is used when transferring the peerList and file list.
+
+ArrayList is used in all cases where a list of items are needed to be handled. The toString() method in list interface helps in creating a single string of the items separated by comma as:
+
+	[item1, item2, item3]
+
+The list is converted to a single string as above, and the string is sent as bytes over the TCP/IP connection. At the receiving end, the peer uses parseStringToList method to parse the above string into a list of string and return it, which is later used in the application for various purposes. This mechanism is very useful and important considering the amount of hardship that has been reduced in handling and transferring the lists.
 
